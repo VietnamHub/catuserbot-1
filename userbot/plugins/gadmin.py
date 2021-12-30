@@ -45,8 +45,8 @@ UNBAN_RIGHTS = ChatBannedRights(
     pattern="gban(?:\s|$)([\s\S]*)",
     command=("gban", plugin_category),
     info={
-        "header": "To ban user in every group where you are admin.",
-        "description": "Will ban the person in every group where you are admin only.",
+        "header": "Để cấm người dùng trong mọi nhóm mà bạn là quản trị viên.",
+        "description": "Sẽ cấm người đó trong mọi nhóm mà bạn chỉ là quản trị viên.",
         "usage": "{tr}gban <username/reply/userid> <reason (optional)>",
     },
 )
@@ -58,10 +58,10 @@ async def catgban(event):  # sourcery no-metrics
     if not user:
         return
     if user.id == catub.uid:
-        return await edit_delete(cate, "`why would I ban myself`")
+        return await edit_delete(cate, "`Tại sao tôi lại cấm bản thân`")
     if gban_sql.is_gbanned(user.id):
         await cate.edit(
-            f"`the `[user](tg://user?id={user.id})` is already in gbanned list any way checking again`"
+            f"[user](tg://user?id={user.id})` đã có trong danh sách cấm bất kỳ cách nào kiểm tra lại`"
         )
     else:
         gban_sql.catgban(user.id, reason)
@@ -69,9 +69,9 @@ async def catgban(event):  # sourcery no-metrics
     count = 0
     sandy = len(san)
     if sandy == 0:
-        return await edit_delete(cate, "`you are not admin of atleast one group` ")
+        return await edit_delete(cate, "`Bạn không phải là quản trị viên của ít nhất một nhóm` ")
     await cate.edit(
-        f"`initiating gban of the `[user](tg://user?id={user.id}) `in {len(san)} groups`"
+        f"`Tiến hành cấm `[người dùng](tg://user?id={user.id}) `khỏi {len(san)} nhóm`"
     )
     for i in range(sandy):
         try:
@@ -82,17 +82,17 @@ async def catgban(event):  # sourcery no-metrics
             achat = await event.client.get_entity(san[i])
             await event.client.send_message(
                 BOTLOG_CHATID,
-                f"`You don't have required permission in :`\n**Chat :** {get_display_name(achat)}(`{achat.id}`)\n`For banning here`",
+                f"`Bạn không có quyền cần thiết trong :`\n**Chat :** {get_display_name(achat)}(`{achat.id}`)\n`Để cấm ở đây`",
             )
     end = datetime.now()
     cattaken = (end - start).seconds
     if reason:
         await cate.edit(
-            f"[{user.first_name}](tg://user?id={user.id}) `was gbanned in {count} groups in {cattaken} seconds`!!\n**Reason :** `{reason}`"
+            f"[{user.first_name}](tg://user?id={user.id}) `đã bị cấm trong {count} nhóm chỉ với {cattaken} giây`!!\n**Lý do :** `{reason}`"
         )
     else:
         await cate.edit(
-            f"[{user.first_name}](tg://user?id={user.id}) `was gbanned in {count} groups in {cattaken} seconds`!!"
+            f"[{user.first_name}](tg://user?id={user.id}) `đã bị cấm trong {count} nhóm chỉ với {cattaken} giây`!!"
         )
     if BOTLOG and count != 0:
         reply = await event.get_reply_message()
@@ -145,15 +145,15 @@ async def catgban(event):
         gban_sql.catungban(user.id)
     else:
         return await edit_delete(
-            cate, f"the [user](tg://user?id={user.id}) `is not in your gbanned list`"
+            cate, f"[user](tg://user?id={user.id}) `không có trong danh sách cấm của bạn`"
         )
     san = await admin_groups(event.client)
     count = 0
     sandy = len(san)
     if sandy == 0:
-        return await edit_delete(cate, "`you are not even admin of atleast one group `")
+        return await edit_delete(cate, "`Bạn thậm chí không phải là quản trị viên của ít nhất một nhóm `")
     await cate.edit(
-        f"initiating ungban of the [user](tg://user?id={user.id}) in `{len(san)}` groups"
+        f"Bắt đầu bỏ cấm [người dùng](tg://user?id={user.id}) trong `{len(san)}` nhóm"
     )
     for i in range(sandy):
         try:
@@ -170,11 +170,11 @@ async def catgban(event):
     cattaken = (end - start).seconds
     if reason:
         await cate.edit(
-            f"[{user.first_name}](tg://user?id={user.id}`) was ungbanned in {count} groups in {cattaken} seconds`!!\n**Reason :** `{reason}`"
+            f"[{user.first_name}](tg://user?id={user.id}`) đã được bỏ cấm trong {count} nhóm chỉ với {cattaken} giây`!!\n**Bởi vì :** `{reason}`"
         )
     else:
         await cate.edit(
-            f"[{user.first_name}](tg://user?id={user.id}) `was ungbanned in {count} groups in {cattaken} seconds`!!"
+            f"[{user.first_name}](tg://user?id={user.id}) `đã được bỏ cấm trong {count} nhóm chỉ với {cattaken} giây`!!"
         )
 
     if BOTLOG and count != 0:
